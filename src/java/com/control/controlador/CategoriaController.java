@@ -113,7 +113,7 @@ public class CategoriaController {
     }
 
     public void agregarPedido() {
-        pedido = ejbProductoFacadel.find(this.pedido.getSerial());
+        pedido = ejbProductoFacadel.find(this.pedido.getId());
         detalle.setProducto(pedido);
         pedidoMaestro.getDetallesPedido().add(detalle);
         detalle = new PedidoDetalleDto();

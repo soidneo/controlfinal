@@ -7,10 +7,13 @@ package com.control.entidad;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -36,13 +39,20 @@ public class Receta implements Serializable {
     @NotNull
     @Column(name = "id_receta", nullable = false)
     private Integer idReceta;
-    @Size(max = 2147483647)
-    @Column(name = "nombre", length = 2147483647)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "nombre", nullable = false, length = 2147483647)
     private String nombre;
-    @Size(max = 2147483647)
-    @Column(name = "descripcion", length = 2147483647)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "descripcion", nullable = false, length = 2147483647)
     private String descripcion;
-    @OneToMany(mappedBy = "idReceta", fetch = FetchType.LAZY)
+    @JoinColumn(name = "producto_fk", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Producto productoFk;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "receta", fetch = FetchType.LAZY)
     private List<RecetaDet> recetaDetList;
 
     public Receta() {
@@ -50,6 +60,12 @@ public class Receta implements Serializable {
 
     public Receta(Integer idReceta) {
         this.idReceta = idReceta;
+    }
+
+    public Receta(Integer idReceta, String nombre, String descripcion) {
+        this.idReceta = idReceta;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 
     public Integer getIdReceta() {
@@ -74,6 +90,14 @@ public class Receta implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Producto getProductoFk() {
+        return productoFk;
+    }
+
+    public void setProductoFk(Producto productoFk) {
+        this.productoFk = productoFk;
     }
 
     public List<RecetaDet> getRecetaDetList() {
